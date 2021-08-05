@@ -18,6 +18,23 @@ jobs:
       - name: Add gnuradio PPA
         run: add-apt-repository --enable-source --yes --keyserver keyserver.ubuntu.com ppa:gnuradio/gnuradio-releases
       - name: Change Ubuntu version
+        run: rm /etc/apt/sources.list.d/* && echo "deb-src http://ppa.launchpad.net/gnuradio/gnuradio-releases/ubuntu focal main" >> /etc/apt/sources.list
+      - name: Install build dependencies
+        run: apt-get update && apt-get -y build-dep gnuradio
+      - name: build
+        run: apt-get source --build gnuradio
+
+  build-deb11:
+    runs-on: ubuntu-latest
+    container: debian:bullseye
+    steps:
+      - name: Config APT sources
+        run: echo "deb http://deb.debian.org/debian/ bullseye main" > /etc/apt/sources.list
+      - name: Install build tools
+        run: apt-get update && apt-get install -y devscripts build-essential software-properties-common
+      - name: Add gnuradio PPA
+        run: add-apt-repository --enable-source --yes --keyserver keyserver.ubuntu.com ppa:gnuradio/gnuradio-releases
+      - name: Change Ubuntu version
         run: rm /etc/apt/sources.list.d/* && echo "deb-src http://ppa.launchpad.net/gnuradio/gnuradio-releases/ubuntu hirsute main" >> /etc/apt/sources.list
       - name: Install build dependencies
         run: apt-get update && apt-get -y build-dep gnuradio
